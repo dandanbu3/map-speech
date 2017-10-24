@@ -38,7 +38,8 @@
 			var numLen = numSteps.getNumSteps();
 			var startNum =0;
 			function test(start,ss) {
-				for (var j=start;j<numLen;j++){
+				console.log(start);
+				for (var j=start+1;j<numLen;j++){
 					if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
