@@ -39,14 +39,15 @@
 			function test(ss) {
 				for (var j=0;j<numLen;j++){
 					if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss) {
-						var text=numSteps.getStep(j).getDescription().match(/[\d\.\u4e00-\u9fa5]/g);
+						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
+
 						var msg = new SpeechSynthesisUtterance();
 						var voices = window.speechSynthesis.getVoices();
 						msg.voice = voices[0]; // 
 						msg.volume = 1; // 0 to 1
 						msg.rate = 1; // 0.1 to 10
 						msg.pitch = 2; //0 to 2
-						msg.text = text.join('');
+						msg.text = text;
 						msg.lang = 'zh';
 						
 						speechSynthesis.speak(msg);
@@ -75,12 +76,12 @@
 					setTimeout(function(){
 						i++;
 						resetMkPoint(i);
-					},100);
+					},1000);
 				}
 			}
 			setTimeout(function(){
 				resetMkPoint(5);
-			},100)
+			},1000)
 
 		});
 	}
