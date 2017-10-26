@@ -20,23 +20,96 @@
 	var map = new BMap.Map("l-map");
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
 
-	var myP1 = new BMap.Point(116.380967,39.913285);    //起点
-	var myP2 = new BMap.Point(116.424374,39.914668);    //终点
+//	var myP1 = new BMap.Point(116.380967,39.913285);    //起点
+//	var myP2 = new BMap.Point(116.424374,39.914668);    //终点
+//	var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/Mario.png", new BMap.Size(32, 70), {    //小车图片
+//		//offset: new BMap.Size(0, -5),    //相当于CSS精灵
+//		imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
+//	  });
+//	var driving2 = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: "r-result", autoViewport: true}});    //驾车实例
+//	driving2.search(myP1, myP2);    //显示一条公交线路
+var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-result", autoViewport: true}});
 	var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/Mario.png", new BMap.Size(32, 70), {    //小车图片
 		//offset: new BMap.Size(0, -5),    //相当于CSS精灵
 		imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
 	  });
-	var driving2 = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: "r-result", autoViewport: true}});    //驾车实例
-	driving2.search(myP1, myP2);    //显示一条公交线路
+        var ggPoint;
+		var geolocation = new BMap.Geolocation();
 
+		geolocation.getCurrentPosition(function(r){
+		if(this.getStatus() == BMAP_STATUS_SUCCESS){
+			var mk = new BMap.Marker(r.point,{icon:myIcon});
+			map.addOverlay(mk);
+			map.panTo(r.point);
+			map.setCenter(r.point);
+			var p1 = new BMap.Point(r.point.lng,r.point.lat);
+			var p2 = new BMap.Point(121.48784,31.313884);
+	//		// 创建地址解析器实例
+	//		var myGeo = new BMap.Geocoder();
+	//		// 将地址解析结果显示在地图上,并调整地图视野
+	//		myGeo.getPoint("场中路187弄", function(point){
+	//	if (point) {
+	//		console.log(point);
+	//		p2 = new BMap.Point(point.lng,point.lat);
+	//		}else{
+	//		console("您选择地址没有解析到结果!");
+	//	}
+	//		}, "上海市");
+			walking.search(p1, p2);
+			walking.setSearchCompleteCallback(function(){
+			var pts = walking.getResults().getPlan(0).getRoute(0).getPath();    //通过驾车实例，获得一系列点的数组
+			console.log(pts);
+			var numSteps =walking.getResults().getPlan(0).getRoute(0);
+			var numLen = numSteps.getNumSteps();
+			var startNum =-1;
+			var paths = pts.length;    //获得有几个点
+			function comparePoint(start,ss) {
+				console.log(start);
+				for (var j=start+1;j<numLen;j++){
+					if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
+						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
+						startNum = j;
+						var msg = new SpeechSynthesisUtterance();
+						var voices = window.speechSynthesis.getVoices();
+						msg.voice = voices[0]; // 
+						msg.volume = 1; // 0 to 1
+						msg.rate = 1; // 0.1 to 10
+						msg.pitch = 2; //0 to 2
+						msg.text = text;
+						msg.lang = 'zh';
+						speechSynthesis.speak(msg);
+					}
+				}
+			}
+			setInterval(function(){
+				geolocation.getCurrentPosition(function(r){
+					console.log('getLocation');
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){
+						comparePoint(startNum,JSON.stringify(r.point));
+						console.log(r.point);
+						mk.setPosition(r.point);
+					}
+				},{enableHighAccuracy: true});
+			},1000)
+			});
+		//	ggPoint = new BMap.Point(r.point.lng,r.point.lat);
+		//	alert('您的位置：'+r.point.lng+','+r.point.lat);
+		}
+		else {
+			alert('failed'+this.getStatus());
+		}        
+	},{enableHighAccuracy: true})
+
+
+    
 	window.run = function (){
-		var driving = new BMap.DrivingRoute(map);    //驾车实例
-		driving.search(myP1, myP2);
+		var driving = new BMap.WalkingRoute(map);    //驾车实例
+		driving.search("我的位置", "复旦大学");
 		driving.setSearchCompleteCallback(function(){
 			var pts = driving.getResults().getPlan(0).getRoute(0).getPath();    //通过驾车实例，获得一系列点的数组
 			var numSteps =driving.getResults().getPlan(0).getRoute(0);
 			var numLen = numSteps.getNumSteps();
-			var startNum =0;
+			var startNum =-1;
 			function test(start,ss) {
 				console.log(start);
 				for (var j=start+1;j<numLen;j++){
@@ -92,7 +165,7 @@
 	}
 
 	setTimeout(function(){
-		run();
+	//	run();
 	},1500);
 
 	
