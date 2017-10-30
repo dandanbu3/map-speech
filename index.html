@@ -70,7 +70,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
 				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
 				 	console.log(lat*lat + lng*lng);
-				 	if(lat*lat + lng*lng < 0.00001){
+				 	if(lat*lat + lng*lng < 0.000001){
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
 						var msg = new SpeechSynthesisUtterance();
