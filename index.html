@@ -64,18 +64,18 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 			var startNum =-1;
 			var paths = pts.length;    //获得有几个点
 			function comparePoint(start,ss) {
-				console.log(start);
+			//	console.log(start);
 				for (var j=start+1;j<numLen;j++){
 				 //	if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
 				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
 				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
-				 	console.log(lat*lat + lng*lng);
+				// 	console.log(lat*lat + lng*lng);
 				 	if(lat*lat + lng*lng < 0.000001){
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
 						var msg = new SpeechSynthesisUtterance();
 						var voices = window.speechSynthesis.getVoices();
-						msg.voice = voices[0]; // 
+						msg.voice = voices[0]; //
 						msg.volume = 1; // 0 to 1
 						msg.rate = 1; // 0.1 to 10
 						msg.pitch = 2; //0 to 2
@@ -85,13 +85,19 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 					}
 				}
 			}
+			var i=0;
 			setInterval(function(){
-				geolocation.getCurrentPosition(function(r){
+				var newGeolocation = new BMap.Geolocation();
+				newGeolocation.getCurrentPosition(function(r){
 					if(this.getStatus() == BMAP_STATUS_SUCCESS){
 						comparePoint(startNum,JSON.stringify(r.point));
 						console.log('getLocation');
 						console.log(r.point);
-						mk.setPosition(r.point);
+						// mk.setPosition(r.point);
+						var newp = new BMap.Point(r.point.lng,r.point.lat);
+						console.log(newp);
+						mk.setPosition(newp);
+						i++;
 					}
 				},{enableHighAccuracy: true});
 			},1000)
@@ -101,11 +107,11 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 		}
 		else {
 			alert('failed'+this.getStatus());
-		}        
+		}
 	},{enableHighAccuracy: true})
 
 
-    
+
 	window.run = function (){
 		var driving = new BMap.WalkingRoute(map);    //驾车实例
 		driving.search("我的位置", "复旦大学");
@@ -123,13 +129,13 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 
 						var msg = new SpeechSynthesisUtterance();
 						var voices = window.speechSynthesis.getVoices();
-						msg.voice = voices[0]; // 
+						msg.voice = voices[0]; //
 						msg.volume = 1; // 0 to 1
 						msg.rate = 1; // 0.1 to 10
 						msg.pitch = 2; //0 to 2
 						msg.text = text;
 						msg.lang = 'zh';
-						
+
 						speechSynthesis.speak(msg);
 					}
 				}
@@ -153,7 +159,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 				carMk.setPosition(pts[i]);
 			//	if(i+1<paths &&JSON.stringify(pts[i+1])!==JSON.stringify(pts[i])){
 				test(startNum,JSON.stringify(pts[i]));
-			
+
 				if(i < paths){
 					setTimeout(function(){
 						i++;
@@ -172,5 +178,5 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 	//	run();
 	},1500);
 
-	
+
 </script>
