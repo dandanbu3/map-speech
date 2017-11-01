@@ -59,20 +59,21 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 			walking.search(p1, p2);
 			walking.setSearchCompleteCallback(function(){
 			var pts = walking.getResults().getPlan(0).getRoute(0).getPath();    //通过驾车实例，获得一系列点的数组
-			console.log(pts);
+			console.log(r.point);
 			var numSteps =walking.getResults().getPlan(0).getRoute(0);
 			var numLen = numSteps.getNumSteps();
 			var startNum =-1;
 			var paths = pts.length;    //获得有几个点
 			var convertor = new BMap.Convertor();
-        	var pointArr = [];
+      var pointArr = [];
+		//	comparePoint(startNum,JSON.stringify(r.point));
 			function comparePoint(start,ss) {
 			//	console.log(start);
 				for (var j=start+1;j<numLen;j++){
 				 //	if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
-				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).latitude);
-				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).longitude);
-				// 	console.log(lat*lat + lng*lng);
+				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
+				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
+				 	alert(lat*lat + lng*lng);
 				 	if(lat*lat + lng*lng < 0.000001){
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
@@ -96,7 +97,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
       }
     }
 			var i=0;
-			
+
 				var newGeolocation = new BMap.Geolocation();
 				window.navigator.geolocation.watchPosition(function(r){
 					//if(this.getStatus() == BMAP_STATUS_SUCCESS){
@@ -109,11 +110,11 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 					//	var newp = new BMap.Point(r.coords.longitude,r.coords.latitude);
 					//	console.log(newp);
 						//alert(newp.lng+','+newp.lat);
-						
+
 						i++;
 					//}
 				});
-			
+
 			});
 		//	ggPoint = new BMap.Point(r.point.lng,r.point.lat);
 		//	alert('您的位置：'+r.point.lng+','+r.point.lat);
