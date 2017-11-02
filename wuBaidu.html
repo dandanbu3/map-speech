@@ -66,15 +66,15 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 			var paths = pts.length;    //获得有几个点
 			var convertor = new BMap.Convertor();
       var pointArr = [];
-		//	comparePoint(startNum,JSON.stringify(r.point));
+			comparePoint(startNum,JSON.stringify(r.point));
 			function comparePoint(start,ss) {
-			//	console.log(start);
+				console.log(ss);
 				for (var j=start+1;j<numLen;j++){
 				 //	if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
 				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
 				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
-				 	alert(lat*lat + lng*lng);
 				 	if(lat*lat + lng*lng < 0.000001){
+				 		alert(lat*lat + lng*lng);
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
 						var msg = new SpeechSynthesisUtterance();
@@ -86,6 +86,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 						msg.text = text;
 						msg.lang = 'zh';
 						speechSynthesis.speak(msg);
+						return ;
 					}
 				}
 			}
