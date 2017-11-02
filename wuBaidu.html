@@ -70,6 +70,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 			function comparePoint(start,ss) {
 				console.log(ss);
 				for (var j=start+1;j<numLen;j++){
+					alert('locationCapture');
 				 //	if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
 				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
 				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
@@ -79,12 +80,13 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 						startNum = j;
 						var msg = new SpeechSynthesisUtterance();
 						var voices = window.speechSynthesis.getVoices();
-						msg.voice = voices[0]; //
+					//	msg.voice = voices[0]; //
 						msg.volume = 1; // 0 to 1
 						msg.rate = 1; // 0.1 to 10
 						msg.pitch = 2; //0 to 2
 						msg.text = text;
 						msg.lang = 'zh';
+						console.log(text);
 						speechSynthesis.speak(msg);
 						return ;
 					}
@@ -106,6 +108,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 						console.log(r);
 						var newp = new BMap.Point(r.coords.longitude,r.coords.latitude);
         				pointArr[0] = newp;
+        				alert('locationChange');
         				convertor.translate(pointArr, 1, 5, translateCallback)
 						// mk.setPosition(r.point);
 					//	var newp = new BMap.Point(r.coords.longitude,r.coords.latitude);
