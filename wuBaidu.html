@@ -70,12 +70,15 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 			function comparePoint(start,ss) {
 				console.log(ss);
 				for (var j=start+1;j<numLen;j++){
-					alert('locationCapture');
+				//	alert('locationCapture');
 				 //	if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
 				 	var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
 				 	var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
-				 	if(lat*lat + lng*lng < 0.000001){
-				 		alert(lat*lat + lng*lng);
+				 	var jd = Math.cos(JSON.parse(ss).lat*Math.PI/180);
+				 	console.log(jd);
+				 	if(lat*lat + lng*lng*jd*jd < 1/1232100){
+				 		// alert(lat*lat + lng*lng);
+				 		console.log(lat*lat + lng*lng*jd*jd);
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
 						var msg = new SpeechSynthesisUtterance();
@@ -108,7 +111,7 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 						console.log(r);
 						var newp = new BMap.Point(r.coords.longitude,r.coords.latitude);
         				pointArr[0] = newp;
-        				alert('locationChange');
+        				//alert('locationChange');
         				convertor.translate(pointArr, 1, 5, translateCallback)
 						// mk.setPosition(r.point);
 					//	var newp = new BMap.Point(r.coords.longitude,r.coords.latitude);
