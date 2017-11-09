@@ -7,7 +7,7 @@
 		#l-map{height:300px;width:100%;}
 		#r-result,#r-result table{width:100%;}
 	</style>
-	<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=kAAGNbgvunMxHmo5ugsVMoNGn5DZooTG"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=kAAGNbgvunMxHmo5ugsVMoNGn5DZooTG"></script>
 	<title>驾车导航的结果面板</title>
 </head>
 <body>
@@ -29,7 +29,7 @@
 //	var driving2 = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: "r-result", autoViewport: true}});    //驾车实例
 //	driving2.search(myP1, myP2);    //显示一条公交线路
 var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-result", autoViewport: true}});
-	var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/Mario.png", new BMap.Size(32, 70), {    //小车图片
+	var myIcon = new BMap.Icon("./Mario.png", new BMap.Size(32, 70), {    //小车图片
 		//offset: new BMap.Size(0, -5),    //相当于CSS精灵
 		imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
 	  });
