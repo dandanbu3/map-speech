@@ -12,6 +12,7 @@
 </head>
 <body>
 	<div id="l-map"></div>
+	<div>终点<input type="text" id="goal"/><button onclick="navigation()">搜索</button></div>
 	<div id="r-result"></div>
 </body>
 </html>
@@ -28,6 +29,7 @@
 //	  });
 //	var driving2 = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: "r-result", autoViewport: true}});    //驾车实例
 //	driving2.search(myP1, myP2);    //显示一条公交线路
+function navigation() {
 var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-result", autoViewport: true}});
 	var myIcon = new BMap.Icon("./Mario.png", new BMap.Size(32, 70), {    //小车图片
 		//offset: new BMap.Size(0, -5),    //相当于CSS精灵
@@ -35,7 +37,11 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 	  });
         var ggPoint;
 		var geolocation = new BMap.Geolocation();
-
+		var myGeo = new BMap.Geocoder();
+		var add=document.getElementById('goal').value;
+		myGeo.getPoint(add, function(point){
+		if (point) {
+			map.centerAndZoom(point, 16);
 		geolocation.getCurrentPosition(function(r){
 		if(this.getStatus() == BMAP_STATUS_SUCCESS){
 			var mk = new BMap.Marker(r.point,{icon:myIcon});
@@ -131,7 +137,12 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 		}
 	},{enableHighAccuracy: true})
 
+	}else{
+			alert("您选择地址没有解析到结果!");
+		}
+	});
 
+}
 
 	window.run = function (){
 		var driving = new BMap.WalkingRoute(map);    //驾车实例
