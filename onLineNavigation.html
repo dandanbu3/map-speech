@@ -21,7 +21,6 @@ window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error
     // TODO
     alert(errorMessage);
 }
-
 	// 百度地图API功能
 	var map = new BMap.Map("l-map");
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
@@ -93,6 +92,8 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
 						var voices = window.speechSynthesis.getVoices();
+						alert(voices);
+						
 						var msg = new SpeechSynthesisUtterance();
 					//	msg.voice = voices[0]; //
 						msg.volume = 1; // 0 to 1
