@@ -92,7 +92,6 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 						var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
 						startNum = j;
 						var voices = window.speechSynthesis.getVoices();
-						alert(voices);
 						
 						var msg = new SpeechSynthesisUtterance();
 					//	msg.voice = voices[0]; //
