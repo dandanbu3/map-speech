@@ -54,7 +54,9 @@ var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-re
 			map.panTo(r.point);
 			map.setCenter(r.point);
 			var p1 = new BMap.Point(r.point.lng,r.point.lat);
-			var p2 = new BMap.Point(121.48784,31.313884);
+			console.log(point);
+			console.log('point');
+			var p2 = new BMap.Point(point.lng,point.lat);
 	//		// 创建地址解析器实例
 	//		var myGeo = new BMap.Geocoder();
 	//		// 将地址解析结果显示在地图上,并调整地图视野
