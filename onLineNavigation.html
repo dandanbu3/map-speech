@@ -33,8 +33,8 @@ window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error
 //	  });
 //	var driving2 = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: "r-result", autoViewport: true}});    //驾车实例
 //	driving2.search(myP1, myP2);    //显示一条公交线路
-function navigation() {
 var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "r-result", autoViewport: true}});
+function navigation() {
 	var myIcon = new BMap.Icon("./Mario.png", new BMap.Size(32, 70), {    //小车图片
 		//offset: new BMap.Size(0, -5),    //相当于CSS精灵
 		imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
