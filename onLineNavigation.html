@@ -12,12 +12,12 @@
     </head>
     <body>
         <div id="l-map"></div>
-        <div>终点<input type="text" id="goal"/><button onclick="navigation()">搜索</button></div>
+        <div>终点<input type="text" id="goal"><button onclick="navigation()">搜索</button></div>
         <div id="r-result"></div>
     </body>
 </html>
 <script type="text/javascript">
-    window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,errorObj) {
+    window.onerror = function(errorMessage, scriptURI, lineNumber, columnNumber, errorObj) {
         alert(errorMessage);
     }
     // 百度地图API功能
@@ -34,8 +34,8 @@
     // driving2.search(myP1, myP2);    //显示一条公交线路
     var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: 'r-result', autoViewport: true}});
     function navigation() {
-        var myIcon = new BMap.Icon('./Mario.png', new BMap.Size(32, 70), {    //小车图片
-            //offset: new BMap.Size(0, -5),    //相当于CSS精灵
+        var myIcon = new BMap.Icon('./Mario.png', new BMap.Size(32, 70), {    //马里奥图片
+            // offset: new BMap.Size(0, -5),    //相当于CSS精灵
             imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
         });
         var ggPoint;
@@ -46,7 +46,7 @@
             if (point) {
                 map.centerAndZoom(point, 16);
                 geolocation.getCurrentPosition(function(r) {
-                    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    if (this.getStatus() === BMAP_STATUS_SUCCESS) {
                         var mk = new BMap.Marker(r.point, {icon: myIcon});
                         map.addOverlay(mk);
                         console.log(r);
@@ -56,22 +56,11 @@
                         console.log(point);
                         console.log('point');
                         var p2 = new BMap.Point(point.lng, point.lat);
-                        // 创建地址解析器实例
-                        // var myGeo = new BMap.Geocoder();
-                        // 将地址解析结果显示在地图上,并调整地图视野
-                        // myGeo.getPoint("场中路187弄", function(point) {
-                        // if (point) {
-                        // console.log(point);
-                        // p2 = new BMap.Point(point.lng, point.lat);
-                        // } else {
-                        // console("您选择地址没有解析到结果!");
-                        // }
-                        // }, "上海市");
                         walking.search(p1, p2);
                         walking.setSearchCompleteCallback(function() {
-                            var pts = walking.getResults().getPlan(0).getRoute(0).getPath();    //通过驾车实例，获得一系列点的数组
+                            var pts = walking.getResults().getPlan(0).getRoute(0).getPath();    //通过步行实例，获得一系列点的数组
                             console.log(r.point);
-                            var numSteps =walking.getResults().getPlan(0).getRoute(0);
+                            var numSteps = walking.getResults().getPlan(0).getRoute(0);
                             var numLen = numSteps.getNumSteps();
                             var startNum = -1;
                             var paths = pts.length;    //获得有几个点
@@ -85,9 +74,9 @@
                                     // if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
                                     var lat = (numSteps.getStep(j).getPosition().lat - JSON.parse(ss).lat);
                                     var lng = (numSteps.getStep(j).getPosition().lng - JSON.parse(ss).lng);
-                                    var jd = Math.cos(JSON.parse(ss).lat * Math.PI/180);
+                                    var jd = Math.cos(JSON.parse(ss).lat * Math.PI / 180);
                                     console.log(jd);
-                                    if(lat * lat + lng * lng * jd * jd < 1/1232100) {
+                                    if(lat * lat + lng * lng * jd * jd < 1 / 1232100) {
                                         // alert(lat * lat + lng * lng);
                                         console.log(lat * lat + lng * lng * jd * jd);
                                         var text = numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
@@ -113,7 +102,7 @@
                                     mk.setPosition(newp);
                                 }
                             }
-                            var i=0;
+                            var i = 0;
                             var newGeolocation = new BMap.Geolocation();
                             window.navigator.geolocation.watchPosition(function(r) {
                                 //if(this.getStatus() == BMAP_STATUS_SUCCESS){
@@ -142,71 +131,4 @@
             }
         });
     }
-    /* window.run = function (){
-    var driving = new BMap.WalkingRoute(map);    //驾车实例
-    driving.search("我的位置", "复旦大学");
-    driving.setSearchCompleteCallback(function(){
-    var pts = driving.getResults().getPlan(0).getRoute(0).getPath();    //通过驾车实例，获得一系列点的数组
-    var numSteps =driving.getResults().getPlan(0).getRoute(0);
-    var numLen = numSteps.getNumSteps();
-    var startNum =-1;
-    function test(start,ss) {
-    console.log(start);
-    for (var j=start+1;j<numLen;j++){
-    if(JSON.stringify(numSteps.getStep(j).getPosition()) === ss){
-    var text=numSteps.getStep(j).getDescription().match(/[\u4e00-\u9fa5]+\S+$/g)[0].replace(/(\<span\>)|(\<\/span\>)|(\<\/div\>)/g,'');
-    startNum = j;
-
-    var msg = new SpeechSynthesisUtterance();
-    var voices = window.speechSynthesis.getVoices();
-    msg.voice = voices[0]; //
-    msg.volume = 1; // 0 to 1
-    msg.rate = 1; // 0.1 to 10
-    msg.pitch = 2; //0 to 2
-    msg.text = text;
-    msg.lang = 'zh';
-
-    speechSynthesis.speak(msg);
-    }
-    }
-    }
-    console.log(driving.getResults());
-    console.log(driving.getResults().getPlan(0));
-    console.log(driving.getResults().getPlan(0).getRoute(0));
-    console.log(driving.getResults().getPlan(0).getRoute(0).getNumSteps());
-    console.log(driving.getResults().getPlan(0).getRoute(0).getStep(0));
-    console.log(driving.getResults().getPlan(0).getRoute(0).getStep(0).getDescription());
-    console.log(driving.getResults().getPlan(0).getRoute(0).getStep(0).getDistance());
-    console.log(driving.getResults().getPlan(0).getRoute(0).getStep(0).getIndex());
-    console.log(driving.getResults().getPlan(0).getRoute(0).getStep(0).getPosition());
-    console.log(pts);
-    var paths = pts.length;    //获得有几个点
-
-    var carMk = new BMap.Marker(pts[0],{icon:myIcon});
-    map.addOverlay(carMk);
-    i=0;
-    function resetMkPoint(i){
-    carMk.setPosition(pts[i]);
-    //	if(i+1<paths &&JSON.stringify(pts[i+1])!==JSON.stringify(pts[i])){
-    test(startNum,JSON.stringify(pts[i]));
-
-    if(i < paths){
-    setTimeout(function(){
-    i++;
-    resetMkPoint(i);
-    },1000);
-    }
-    }
-    setTimeout(function(){
-    resetMkPoint(0);
-    },1000)
-
-    });
-    }
-
-    setTimeout(function(){
-    // run();
-    },1500);
-    */
-
 </script>
