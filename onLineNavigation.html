@@ -83,6 +83,9 @@
                                         msg.text = text;
                                         //msg.lang = 'zh';
                                         console.log(text);
+                                        if (speechSynthesis.paused) {
+                                            speechSynthesis.resume();
+                                        }
                                         speechSynthesis.speak(msg);
                                         return ;
                                     }
