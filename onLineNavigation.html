@@ -24,9 +24,16 @@
     // 百度地图API功能
     var map = new BMap.Map('l-map');
     map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
-
+    map.enableScrollWheelZoom();
     var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: 'r-result', autoViewport: true}});
     function navigation() {
+        var allOverlay = map.getOverlays();
+        for (var h = 0; h < allOverlay.length; h++) {
+            if (allOverlay[h].getLabel && allOverlay[h].getLabel() && allOverlay[h].getLabel().content == '起始位置') {
+                map.removeOverlay(allOverlay[h]);
+                break;
+            }
+        }
         var myIcon = new BMap.Icon('./Mario.png', new BMap.Size(32, 70), {    //马里奥图片
             // offset: new BMap.Size(0, -5),    //相当于CSS精灵
             imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
@@ -41,6 +48,8 @@
                 geolocation.getCurrentPosition(function(r) {
                     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
                         var mk = new BMap.Marker(r.point, {icon: myIcon});
+                        var label = new BMap.Label('起始位置', {offset: new BMap.Size(20, -10)});
+                        mk.setLabel(label);
                         map.addOverlay(mk);
                         console.log(r);
                         map.panTo(r.point);
